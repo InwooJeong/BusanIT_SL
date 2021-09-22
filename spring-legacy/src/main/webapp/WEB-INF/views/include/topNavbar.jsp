@@ -48,9 +48,9 @@
 					aria-expanded="false"> 내정보 관리 </a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<a class="dropdown-item" href="/member/pmodi">비밀번호 변경</a> <a
-							class="dropdown-item" href="/member/modify">내정보 수정</a>
+							class="dropdown-item" href="/member/imodi">내정보 수정</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="/member/remove">회원탈퇴</a>
+						<a class="dropdown-item" href="/member/delete">회원탈퇴</a>
 					</div></li>
 				</c:if>
 

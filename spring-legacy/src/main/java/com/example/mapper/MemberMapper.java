@@ -37,6 +37,14 @@ public interface MemberMapper {
 			+ " WHERE id = #{id} ")
 	void updateMember(MemberVO memberVO);
 	
-	int modiPassById(String id);
+	@Update(" UPDATE member "
+			+ " SET passwd = #{passwd} "
+			+ " WHERE id = #{id}")
+	void modiPassById(MemberVO memberVO);
+	
+	@Update(" UPDATE member "
+			+ " SET name = #{name}, birthday = #{birthday}, gender = #{gender}, email = #{email}, recv_email=#{recvEmail} "
+			+ " WHERE id = #{id} ")
+	void imodi(MemberVO memberVO);
 	
 }

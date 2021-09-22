@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -191,12 +192,64 @@ public class MemberController {
 	}
 	
 	@PostMapping("/pmodi")
-	public String pmodi(HttpSession session, HttpServletRequest request, HttpServletResponse response, 
-			String id, String passwd, String pmodi) {
+	public ResponseEntity<String> pmodi(HttpSession session, HttpServletResponse response, 
+			MemberVO memberVO, String id, String passwd, @RequestParam("pmodi") String pmodi) {
 		
+		memberVO = memberService.getMemberById(id);
+		boolean isPasswdSame = BCrypt.checkpw(passwd, memberVO.getPasswd());
+		String message = "";
 		
+		if(!isPasswdSame) {
+			message = "비밀번호 오류!";
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			
+			String str = Script.back(message);
+			
+			return new ResponseEntity<String>(str, headers, HttpStatus.OK);
+		}
 		
-		return null;
+		pmodi = BCrypt.hashpw(pmodi, BCrypt.gensalt());
+		
+		memberVO.setPasswd(pmodi);
+		
+		memberService.modiPassById(memberVO);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location", "/"); //redirect 경로 지정
+		
+		//리다이렉트일 경우 HttpStatus.Found
+		return new ResponseEntity<String>(headers, HttpStatus.FOUND);
 	}
+	
+	@GetMapping("/imodi")
+	public String imodi(String id) {
+		
+		return "member/imodi";
+	}
+	
+	@PostMapping("/imodi")
+	public String imodi(String id, MemberVO memberVO) {
+		System.out.println("imodi post 왔다@@@@@@@@@@@@@@@");
+		System.out.println(id+"수정@@@");
+		String bday = memberVO.getBirthday();
+		//System.out.println("여기?");
+		bday = bday.replace("-","");
+		//System.out.println("여기??");
+		System.out.println(bday);
+		memberVO.setBirthday(bday);
+		
+		System.out.println("memberVO modi" + memberVO);
+		
+		memberService.imodi(memberVO);
+		
+		return "redirect: /";
+	}
+	
+	@GetMapping("/delete")
+	public String delete(String id) {
+		return "member/delete";
+	}
+	
 	
 }

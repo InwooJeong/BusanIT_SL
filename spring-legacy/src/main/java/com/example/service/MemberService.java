@@ -57,9 +57,14 @@ public class MemberService {
 		memberMapper.updateMember(memberVO);
 	}
 	
-	public int modiPassById(String id) {
-		int rowCount = memberMapper.modiPassById(id);
-		return rowCount;
+	@Transactional
+	public void modiPassById(MemberVO memberVO) {
+		memberMapper.modiPassById(memberVO);
+	}
+	
+	@Transactional
+	public void imodi(MemberVO memberVO) {
+		memberMapper.imodi(memberVO);
 	}
 	
 }
